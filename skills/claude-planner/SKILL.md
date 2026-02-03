@@ -7,6 +7,18 @@ description: "Generate detailed implementation plans, roadmaps, and design appro
 
 Claude Planner is a specialized tool that invokes Claude Code CLI with Opus 4.5 model in plan mode to generate detailed implementation plans. When you need to plan complex changes that span multiple modules or need a structured approach before coding, use Claude Planner.
 
+## ⚠️ Important: Execution Time Notice
+
+**Claude Planner typically takes 3-15 minutes to complete**, depending on task complexity and codebase size. During execution:
+
+- **The terminal may appear frozen** with no output - this is normal
+- **Do NOT interrupt or terminate** the process
+- The CLI is actively working in the background, exploring the codebase and generating a detailed plan
+- Use `--verbose` flag to see real-time progress if you need reassurance
+- **Be patient** - complex planning requires time for thorough analysis
+
+If you interrupt the process thinking it's stuck, you'll lose all progress and need to start over.
+
 ## When to Use Claude Planner
 
 - User explicitly requests creating an implementation plan
@@ -62,12 +74,14 @@ Use this command pattern:
 bash skills/claude-planner/scripts/plan.sh /tmp/question.txt -o /tmp/plan.md
 ```
 
+**⏱️ Expected wait time: 3-15 minutes** - The terminal will appear inactive while Claude analyzes your codebase. This is normal. Add `--verbose` to see progress.
+
 Flags:
 - First argument: Path to question file (or `-` for stdin)
 - `-o <path>`: Output file path (default: `/tmp/claude-plan-YYYYMMDD-HHMMSS.md`)
 - `--model <name>`: Claude model to use (default: `opus`)
 - `--cwd <path>`: Repository root for exploration (default: current directory)
-- `--verbose`: Show Claude's progress and debugging output
+- `--verbose`: Show Claude's progress and debugging output **(recommended for first-time users to see that it's working)**
 
 ### Step 3: Read the Plan
 
@@ -107,19 +121,23 @@ Read /tmp/auth-plan.md
 
 ## Tips
 
-1. **Provide complete context**: Include current architecture, existing patterns, and constraints. Claude Planner explores the codebase but benefits from explicit context.
+1. **Be patient with execution time**: Claude Planner takes several minutes to complete. The terminal will look frozen - this is expected behavior. For peace of mind, use `--verbose` flag to see real-time progress. Do not interrupt the process.
 
-2. **Be specific about goals**: "Add authentication" is vague. "Add JWT-based authentication with refresh tokens, session management, and role-based access control" is specific.
+2. **Provide complete context**: Include current architecture, existing patterns, and constraints. Claude Planner explores the codebase but benefits from explicit context.
 
-3. **Mention existing patterns**: If your codebase follows specific conventions (e.g., "we use dependency injection", "all services are in src/services/"), include that.
+3. **Be specific about goals**: "Add authentication" is vague. "Add JWT-based authentication with refresh tokens, session management, and role-based access control" is specific.
 
-4. **Include constraints**: Technical constraints (libraries to use/avoid, performance requirements) and business constraints (must work with existing user table, no breaking changes).
+4. **Mention existing patterns**: If your codebase follows specific conventions (e.g., "we use dependency injection", "all services are in src/services/"), include that.
 
-5. **Review before implementing**: The plan is a roadmap, not a prescription. Adjust based on insights during implementation or team discussion.
+5. **Include constraints**: Technical constraints (libraries to use/avoid, performance requirements) and business constraints (must work with existing user table, no breaking changes).
 
-6. **Iterate if needed**: If the plan doesn't address something, create a new question.txt with additional context or specific follow-up questions.
+6. **Review before implementing**: The plan is a roadmap, not a prescription. Adjust based on insights during implementation or team discussion.
+
+7. **Iterate if needed**: If the plan doesn't address something, create a new question.txt with additional context or specific follow-up questions.
 
 ## Common Issues
+
+**"Terminal appears frozen/stuck"**: This is NORMAL. Planning takes 3-15 minutes. The CLI is working in the background. Do NOT interrupt. Use `--verbose` flag to see progress if concerned.
 
 **"claude: command not found"**: Install Claude Code CLI and authenticate first
 
@@ -128,6 +146,8 @@ Read /tmp/auth-plan.md
 **Permission errors**: Ensure the output directory is writable
 
 **Plan seems off-track**: The plan quality depends on question clarity. Revise the question with more specific requirements and try again
+
+**Process seems to take too long**: Large codebases or complex questions can take 10-15 minutes. If it exceeds 20 minutes with `--verbose` showing no progress, then you may interrupt and retry with a more focused question.
 
 ## Alternative: Direct Piping
 
