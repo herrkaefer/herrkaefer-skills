@@ -56,6 +56,7 @@ Flags:
 - First argument: Path to the plan markdown file (required)
 - `-o <path>`: Output file for implementation report (default: `/tmp/codex-build-report-YYYYMMDD-HHMMSS.txt`)
 - `--cwd <path>`: Working directory for implementation (default: extracted from plan frontmatter or current directory)
+- `-m, --model <name>`: Codex model to use (default: from `~/.codex/config.toml`)
 - `--verbose`: Show Codex's progress output
 
 ### Step 3: Review Implementation Results
@@ -86,8 +87,8 @@ bash skills/claude-planner/scripts/plan.sh /tmp/auth-request.txt -o /tmp/auth-pl
 Read /tmp/auth-plan.md
 # Plan looks good, ready to implement
 
-# 3. Execute with Codex Builder
-bash skills/codex-builder/scripts/execute-plan.sh /tmp/auth-plan.md -o /tmp/auth-build.txt
+# 3. Execute with Codex Builder (using specific model)
+bash skills/codex-builder/scripts/execute-plan.sh /tmp/auth-plan.md -o /tmp/auth-build.txt --model gpt-5.2-codex
 
 # 4. Review implementation
 Read /tmp/auth-build.txt

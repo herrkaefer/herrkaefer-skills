@@ -10,12 +10,13 @@ SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 PLAN_FILE=""
 OUTPUT_FILE=""
 CWD=""
+MODEL=""
 VERBOSE=false
 
 # Usage message
 usage() {
     cat <<'EOF'
-Usage: execute-plan.sh <plan-file> [-o output.txt] [--cwd path] [--verbose]
+Usage: execute-plan.sh <plan-file> [-o output.txt] [--cwd path] [--model name] [--verbose]
 
 Execute an implementation plan using Codex CLI for autonomous implementation.
 
@@ -25,12 +26,14 @@ Arguments:
 Options:
   -o, --output      Output file for implementation report (default: /tmp/codex-build-report-YYYYMMDD-HHMMSS.txt)
   --cwd             Working directory for implementation (default: extracted from plan or current directory)
+  -m, --model       Codex model to use (default: from ~/.codex/config.toml)
   --verbose         Show Codex's progress output
   -h, --help        Show this help message
 
 Example:
   execute-plan.sh /tmp/auth-plan.md -o /tmp/auth-build.txt
-  execute-plan.sh ~/.claude/plans/plan.md --verbose
+  execute-plan.sh ~/.claude/plans/plan.md --model gpt-5.2-codex --verbose
+  execute-plan.sh plan.md -m o3 --cwd /path/to/project
 EOF
 }
 
@@ -68,6 +71,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --cwd)
             CWD="$2"
+            shift 2
+            ;;
+        -m|--model)
+            MODEL="$2"
             shift 2
             ;;
         --verbose)
@@ -186,9 +193,20 @@ if [[ "$VERBOSE" == true ]]; then
     echo "Plan file: $PLAN_FILE"
     echo "Working directory: $CWD"
     echo "Output report: $OUTPUT_FILE"
+    if [[ -n "$MODEL" ]]; then
+        echo "Model: $MODEL"
+    else
+        echo "Model: (default from config)"
+    fi
     echo ""
     echo "Sending instruction to Codex..."
     echo ""
+fi
+
+# Prepare codex arguments
+CODEX_ARGS="--full-auto"
+if [[ -n "$MODEL" ]]; then
+    CODEX_ARGS="$CODEX_ARGS --model $MODEL"
 fi
 
 # Execute Codex
@@ -197,14 +215,14 @@ EXECUTION_START=$(date +%s)
 if [[ "$VERBOSE" == true ]]; then
     # Show output in real-time
     cd "$CWD"
-    cat "$INSTRUCTION_FILE" | codex exec --full-auto 2>&1 | tee /tmp/codex-output-temp.txt
+    cat "$INSTRUCTION_FILE" | codex exec $CODEX_ARGS 2>&1 | tee /tmp/codex-output-temp.txt
     CODEX_EXIT_CODE=${PIPESTATUS[1]}
     CODEX_OUTPUT=$(cat /tmp/codex-output-temp.txt)
     rm -f /tmp/codex-output-temp.txt
 else
     # Suppress stderr
     cd "$CWD"
-    CODEX_OUTPUT=$(cat "$INSTRUCTION_FILE" | codex exec --full-auto 2>&1)
+    CODEX_OUTPUT=$(cat "$INSTRUCTION_FILE" | codex exec $CODEX_ARGS 2>&1)
     CODEX_EXIT_CODE=$?
 fi
 
@@ -227,6 +245,7 @@ Codex Builder Implementation Report
 Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 Plan file: $PLAN_FILE
 Working directory: $CWD
+Model: ${MODEL:-default from config}
 Status: FAILED (exit code $CODEX_EXIT_CODE)
 
 Error Output:
@@ -245,6 +264,7 @@ Codex Builder Implementation Report
 Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 Plan file: $PLAN_FILE
 Working directory: $CWD
+Model: ${MODEL:-default from config}
 Execution time: ${EXECUTION_TIME}s
 
 Implementation Output:
