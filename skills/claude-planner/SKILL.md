@@ -3,7 +3,7 @@ name: claude-planner
 description: "Generate detailed implementation plans, roadmaps, and design approaches by delegating to Claude Code CLI (Opus 4.5) in plan mode. Use when user needs to: (1) Create an implementation plan, roadmap, strategy, or design approach for a feature or change, (2) Plan large-scale refactoring affecting multiple modules or components, (3) Design architecture for new features requiring cross-module changes, (4) Get a structured roadmap before starting complex implementation, (5) Have stakeholders review the approach before coding begins. Supports all languages - user may ask in English, Chinese, or any language for planning assistance."
 ---
 
-# How to Use Claude Planner from Claude Code
+# How to Use Claude Planner from Other Agents
 
 Claude Planner is a specialized tool that invokes Claude Code CLI with Opus 4.5 model in plan mode to generate detailed implementation plans. When you need to plan complex changes that span multiple modules or need a structured approach before coding, use Claude Planner.
 
