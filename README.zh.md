@@ -9,7 +9,10 @@
 
 ## Skills
 
-- `claude-planner`：通过 Claude Code CLI 的计划模式生成详细实现方案。完整用法见 `skills/claude-planner/SKILL.md`。
+- `claude-planner`：通过 Claude Code CLI 的计划模式生成详细实现方案。
+适用于需求还不够清晰、需要先把目标拆解为可执行步骤、明确范围与风险的场景。完整用法见 `skills/claude-planner/SKILL.md`。
+- `codex-builder`：使用 Codex CLI 执行实现计划并输出实现报告。
+适用于已经有完整计划（例如由 `claude-planner` 产出）并希望 Codex 自动完成实现、汇总改动结果的场景。完整用法见 `skills/codex-builder/SKILL.md`。
 
 ## 安装（skills CLI）
 
@@ -17,6 +20,7 @@
 npx skills add <owner>/<repo>
 # 可选：只安装指定 skill
 npx skills add <owner>/<repo> --skill claude-planner
+npx skills add <owner>/<repo> --skill codex-builder
 ```
 
 ## 本地使用
