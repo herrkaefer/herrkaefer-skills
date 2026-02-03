@@ -14,18 +14,21 @@
 - `codex-builder`：使用 Codex CLI 执行实现计划并输出实现报告。
 适用于已经有完整计划（例如由 `claude-planner` 产出）并希望 Codex 自动完成实现、汇总改动结果的场景。完整用法见 `skills/codex-builder/SKILL.md`。
 
-## 安装（skills CLI）
+## 安装
 
 ```bash
-npx skills add <owner>/<repo>
-# 可选：只安装指定 skill
-npx skills add <owner>/<repo> --skill claude-planner
-npx skills add <owner>/<repo> --skill codex-builder
+npx skills add herrkaefer/herrkaefer-skills
 ```
+
+**提示**
+
+- 不需要为 Claude Code 安装 `claude-planner` skill。
+- 不需要为 codex 安装 `codex-builder` skill。
 
 ## 本地使用
 
 每个 skill 的使用方法都写在 `skills/<skill-name>/SKILL.md`。
+
 
 ## 许可证
 
